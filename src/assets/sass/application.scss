@@ -2,9 +2,6 @@ $govuk-page-width: 1200px;
 
 @import "../../../node_modules/govuk-frontend/govuk/all";
 
-@import "components/flex-grid";
-@import "components/list-item";
-
 .flash-container {
   @extend .govuk-error-summary;
   margin-top: govuk-spacing(6);
