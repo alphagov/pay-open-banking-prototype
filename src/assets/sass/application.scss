@@ -1,0 +1,23 @@
+$govuk-page-width: 1200px;
+
+@import "../../../node_modules/govuk-frontend/govuk/all";
+
+@import "components/flex-grid";
+@import "components/list-item";
+
+.flash-container {
+  @extend .govuk-error-summary;
+  margin-top: govuk-spacing(6);
+
+  &--good {
+    border-color:  govuk-colour("green");
+  }
+
+  .notification {
+    @include govuk-font($size: 19);
+
+    h2 {
+      margin-top: 0;
+    }
+  }
+}

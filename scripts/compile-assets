@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# Ensure structure for writing file exists
+mkdir -p dist/public
+
+# Cleanup previous builds for SASS
+rm -f app/public/terminals-demo*
+
+# Build CSS from SASS root document
+APPLICATION_SASS="src/assets/terminals-demo.scss"
+BUILD_FOLDER="dist/public"
+BUILD_TARGET="terminals-demo"
+MANIFEST_TARGET="$BUILD_FOLDER/manifest.json"
+VERSION=$(npm run version --silent)
+
+TEMP_FILE="$BUILD_FOLDER/$BUILD_TARGET.tmp"
+sass --style=compressed --load-path=node_modules --quiet-deps $APPLICATION_SASS > $TEMP_FILE
+
+# Version file based on file hash
+HASH=$(sha1sum $TEMP_FILE | awk '{ print $1 }')
+OUT_FILE="$BUILD_FOLDER/$BUILD_TARGET-$HASH.css"
+
+mv "$TEMP_FILE" "$OUT_FILE"
+echo "Application styles compiled ($OUT_FILE)"
+
+# Write a manifest to be used by templating libraries pointing to this resource
+echo "{
+  \"terminals-demo.css\": \"/public/$BUILD_TARGET-$HASH.css\",
+  \"version\": \"$VERSION\"
+  }" > $MANIFEST_TARGET
+echo "Asset manifest written ($MANIFEST_TARGET)"

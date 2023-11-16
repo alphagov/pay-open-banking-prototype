@@ -1,0 +1,21 @@
+{% extends "govuk/template.njk" %}
+{% from "govuk/components/footer/macro.njk" import govukFooter %}
+
+{% block pageTitle %}GOV.UK Pay Terminals demo{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="/stylesheets/application.min.css" media="all">
+    {% block pageSpecificStyle %}
+    {% endblock %}
+{% endblock %}
+
+{% block content %}
+        <div class="govuk-grid-row">
+            {% include "./flash.njk" %}
+
+            <div class="govuk-grid-column-three-quarters">
+                {% block mainContent %}
+                {% endblock %}
+            </div>
+        </div>
+{% endblock %}

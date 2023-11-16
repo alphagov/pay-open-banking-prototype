@@ -1,0 +1,30 @@
+# Compiled assets
+dist/
+app/public
+public/
+
+src/tests/cypress/videos
+src/tests/cypress/screenshots
+
+# Logs
+npm-debug.log*
+
+# Dependencies
+node_modules
+
+# npm cache
+.npm
+
+# development environment files
+.env
+
+# vim
+*.swp
+
+# logs
+*.log
+
+.idea
+
+# ST4
+*.sublime-*
