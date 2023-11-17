@@ -3,10 +3,10 @@ import dotenv from 'dotenv'
 import nunjucks from 'nunjucks'
 import flash from 'connect-flash'
 import session from 'express-session'
+import path from 'path'
 
 import logger from './logger'
-
-import path from 'path'
+import * as example from './web/example.http'
 
 dotenv.config()
 
@@ -29,5 +29,6 @@ app.use(express.json({ strict: true, limit: '15kb' }))
 app.use(flash())
 
 // Add routes here
+app.get('/example', example.show)
 
 app.listen(port, () => logger.info(`server started on port ${port}`))
