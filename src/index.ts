@@ -7,6 +7,7 @@ import path from 'path'
 
 import logger from './logger'
 import * as example from './web/example.http'
+import * as payment from './web/payment.http'
 
 dotenv.config()
 
@@ -30,5 +31,6 @@ app.use(flash())
 
 // Add routes here
 app.get('/example', example.show)
+app.get('/callback', payment.success)
 
 app.listen(port, () => logger.info(`server started on port ${port}`))
