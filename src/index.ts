@@ -7,7 +7,7 @@ import path from 'path'
 
 import logger from './logger'
 import * as example from './web/example.http'
-import * as payment from './web/payment.http'
+import * as tinkPayment from './web/tink_payment.http'
 
 dotenv.config()
 
@@ -31,6 +31,8 @@ app.use(flash())
 
 // Add routes here
 app.get('/example', example.show)
-app.get('/callback', payment.success)
+// Tink routes
+app.get('/callback', tinkPayment.success)
+app.post('/make-a-tink-payment', tinkPayment.requestPayment)
 
 app.listen(port, () => logger.info(`server started on port ${port}`))

@@ -7,7 +7,7 @@ GOV.UK Pay prototype for an open banking user journey
 
 `npm run start`
 
-## Doing a demo
+## Doing a Tink demo
 
 At the moment, follow the [Tink curl instructions for a one-time payment](https://docs.tink.com/resources/payments/one-time-payments/initiate-your-first-one-time-payment).
 At [3. Build a Tink URL](https://docs.tink.com/resources/payments/one-time-payments/initiate-your-first-one-time-payment#build-a-tink-url), use
