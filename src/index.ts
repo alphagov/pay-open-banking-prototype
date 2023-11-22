@@ -8,6 +8,7 @@ import path from 'path'
 import logger from './logger'
 import * as example from './web/example.http'
 import * as tinkPayment from './web/tink_payment.http'
+import * as truelayerPayment from './web/truelayer_payment.http'
 
 dotenv.config()
 
@@ -34,5 +35,7 @@ app.get('/example', example.show)
 // Tink routes
 app.get('/callback', tinkPayment.success)
 app.post('/make-a-tink-payment', tinkPayment.requestPayment)
+// Truelayer routes
+app.get('/truelayer/start', truelayerPayment.startPayment)
 
 app.listen(port, () => logger.info(`server started on port ${port}`))
