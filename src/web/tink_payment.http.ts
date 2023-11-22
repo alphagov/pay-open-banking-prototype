@@ -13,36 +13,42 @@ export async function success(req: Request, res: Response, next: NextFunction) {
 }
 
 export async function requestPayment(req: Request, res: Response, next: NextFunction) {
-    const accessToken = await getAccessToken();
-    const response = await axios({
-        method: "POST",
-        url: 'https://api.tink.com/api/v1/payments/requests',
-        headers: { 'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json' },
-        data: {
-            "destinations": [
-                {
-                    "accountNumber": "31245678901234",
-                    "type": "sort-code"
-                }
-            ],
-            "amount": 10,
-            "currency": "GBP",
-            "market": "GB",
-            "recipientName": "Test AB",
-            "sourceMessage": "Payment for Gym Equipment",
-            "remittanceInformation": {
-                "type": "REFERENCE",
-                "value": "CREDITOR-REF-12345"
+    try {
+        const accessToken = await getAccessToken();
+        const response = await axios({
+            method: "POST",
+            url: 'https://api.tink.com/api/v1/payments/requests',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
             },
-            "paymentScheme": "FASTER_PAYMENTS"
+            data: {
+                "destinations": [
+                    {
+                        "accountNumber": "31245678901234",
+                        "type": "sort-code"
+                    }
+                ],
+                "amount": 10,
+                "currency": "GBP",
+                "market": "GB",
+                "recipientName": "Test AB",
+                "sourceMessage": "Payment for Gym Equipment",
+                "remittanceInformation": {
+                    "type": "REFERENCE",
+                    "value": "CREDITOR-REF-12345"
+                },
+                "paymentScheme": "FASTER_PAYMENTS"
+            }
+        })
+        if (![200, 201].includes(response.status)) {
+            logger.error('Something wrong with calling /v1/payments/requests')
+            throw new Error()
+        } else {
+            res.send({next_url: createTinkUrl(response.data.id)})
         }
-    })
-    if (![200,201].includes(response.status)) {
-        logger.error('Something wrong with calling /v1/payments/requests')
-        throw new Error()
-    } else {
-        return { next_url: createTinkUrl(response.data.id) }
+    } catch (e) {
+        next(e)
     }
 }
 
@@ -51,13 +57,12 @@ function createTinkUrl(paymentRequestId: string) {
 }
 
 async function getAccessToken() {
-    const data = {
-        'client_id': process.env.TINK_CLIENT_ID,
-        'client_secret': process.env.TINK_CLIENT_SECRET,
-        'grant_type': 'client_credentials',
-        'scope': 'payment:read,payment:write,providers:read'
-    }
-    const response = await axios.post('https://api.tink.com/api/v1/oauth/token', data)
+    const params = new URLSearchParams();
+    params.append('client_id', process.env.TINK_CLIENT_ID);
+    params.append('client_secret', process.env.TINK_CLIENT_SECRET);
+    params.append('grant_type', 'client_credentials');
+    params.append('scope', 'payment:read,payment:write,providers:read');
+    const response = await axios.post('https://api.tink.com/api/v1/oauth/token', params)
     if (response.status !== 200) {
         logger.error('Something wrong with calling /v1/oauth/token')
         throw new Error()

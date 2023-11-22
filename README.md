@@ -5,14 +5,12 @@ GOV.UK Pay prototype for an open banking user journey
 
 `npm install && npm run compile`
 
+Set the `TINK_CLIENT_ID` and `TINK_CLIENT_SECRET` env vars.
+
 `npm run start`
 
 ## Doing a Tink demo
 
-At the moment, follow the [Tink curl instructions for a one-time payment](https://docs.tink.com/resources/payments/one-time-payments/initiate-your-first-one-time-payment).
-At [3. Build a Tink URL](https://docs.tink.com/resources/payments/one-time-payments/initiate-your-first-one-time-payment#build-a-tink-url), use
-the [tink link helper](https://console.tink.com/payments/tink-link) to build a tink url.
-
-Enter that url in the browser and make a payment.
+`curl -X POST http://localhost:8080/make-a-tink-payment` to get a `next_url`. Open `next_url` and complete the payment.
 
 The payment outcome should redirect to http://localhost:8080/callback on this app.
