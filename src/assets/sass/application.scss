@@ -1,6 +1,7 @@
 $govuk-page-width: 1200px;
 
 @import "../../../node_modules/govuk-frontend/govuk/all";
+@import "./components/accessible-autocomplete";
 
 .flash-container {
   @extend .govuk-error-summary;

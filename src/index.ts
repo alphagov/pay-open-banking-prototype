@@ -31,8 +31,8 @@ app.use(flash())
 
 // Tink routes
 app.get('/callback', tinkPayment.success)
-app.get('/make-a-tink-payment', tinkPayment.paymentPage)
-app.post('/make-a-tink-payment', tinkPayment.requestPayment)
+app.get('/make-a-tink-payment', tinkPayment.showBankSelectorPage)
+app.post('/make-a-tink-payment', tinkPayment.submitBankSelectorPage)
 
 // TrueLayer routes
 app.get('/truelayer/start', truelayerPayment.startPayment)

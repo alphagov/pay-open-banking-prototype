@@ -6,10 +6,13 @@ import url from 'url'
 
 const port = 8080
 
-export async function paymentPage(req: Request, res: Response, next: NextFunction) {
+export async function showBankSelectorPage(req: Request, res: Response, next: NextFunction) {
     const providers = await getProviders()
-    const providerOptions = providers.map(provider => provider.name)
-    res.render('make_a_tink_payment', { providerOptions })
+    const providerOptions = providers.map(provider => ({
+        displayName: `${provider.displayName} - ${provider.displayDescription}`,
+        name: provider.name
+    }))
+    res.render('tink_bank_selector', {providerOptions})
 }
 
 // Example callback url for an error payment: http://localhost:8080/callback?credentials=aa08a11adcfa4cae8c6c7778c70e5ba5&error=BAD_REQUEST&error_reason=INVALID_STATE_PAYMENT_RETRY_NOT_ALLOWED&message=We%27re%20sorry%2C%20an%20error%20has%20occurred&payment_request_id=0904ca74d62940c686343a9dfe82e56a&tracking_id=21ee7ad7-2fbe-4a58-8993-6799dbc4fc31
@@ -19,7 +22,7 @@ export async function success(req: Request, res: Response, next: NextFunction) {
     res.render('payment_success', {paymentId: req.query.payment_request_id})
 }
 
-export async function requestPayment(req: Request, res: Response, next: NextFunction) {
+export async function submitBankSelectorPage(req: Request, res: Response, next: NextFunction) {
     try {
         const accessToken = await getAccessToken();
         const response = await axios({
@@ -60,7 +63,9 @@ export async function requestPayment(req: Request, res: Response, next: NextFunc
 }
 
 class Provider {
-    name: string
+    name: string;
+    displayName: string;
+    displayDescription: string;
 }
 
 async function getProviders(): Promise<Provider[]> {
