@@ -5,6 +5,12 @@ import logger from '.././logger'
 
 const port = 8080
 
+export async function paymentPage(req: Request, res: Response, next: NextFunction) {
+    const providers = await getProviders()
+    const providerOptions = providers.map(provider => provider.name)
+    res.render('make_a_tink_payment', { providerOptions })
+}
+
 // Example callback url for an error payment: http://localhost:8080/callback?credentials=aa08a11adcfa4cae8c6c7778c70e5ba5&error=BAD_REQUEST&error_reason=INVALID_STATE_PAYMENT_RETRY_NOT_ALLOWED&message=We%27re%20sorry%2C%20an%20error%20has%20occurred&payment_request_id=0904ca74d62940c686343a9dfe82e56a&tracking_id=21ee7ad7-2fbe-4a58-8993-6799dbc4fc31
 // Example callback url for a successful payment: http://localhost:8080/callback?payment_request_id=xxx
 export async function success(req: Request, res: Response, next: NextFunction) {
@@ -50,6 +56,25 @@ export async function requestPayment(req: Request, res: Response, next: NextFunc
     } catch (e) {
         next(e)
     }
+}
+
+class Provider {
+    name: string
+}
+
+async function getProviders(): Promise<Provider[]> {
+    const accessToken = await getAccessToken();
+    const response = await axios({
+        method: "GET",
+        url: 'https://api.tink.com/api/v1/providers/GB',
+        params: {
+            includeTestProviders: true
+        },
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        }
+    })
+    return response.data.providers
 }
 
 function createTinkUrl(paymentRequestId: string) {

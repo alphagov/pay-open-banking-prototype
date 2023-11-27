@@ -32,9 +32,12 @@ app.use(flash())
 
 // Add routes here
 app.get('/example', example.show)
+
 // Tink routes
 app.get('/callback', tinkPayment.success)
+app.get('/make-a-tink-payment', tinkPayment.paymentPage)
 app.post('/make-a-tink-payment', tinkPayment.requestPayment)
+
 // Truelayer routes
 app.get('/truelayer/start', truelayerPayment.startPayment)
 
