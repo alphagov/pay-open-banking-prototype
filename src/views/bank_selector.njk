@@ -21,15 +21,17 @@
 
         <h2 class="govuk-heading-s">Search for your bank</h2>
 
-        <form action="/make-a-tink-payment" method="post">
+        <form method="post">
             <div class="govuk-form-group">
+                <input id="paymentId" name="paymentId" type="hidden" value="{{ paymentId }}">
+
                 <label class="govuk-label" for="bank-picker">
                     Start typing your bank account
                 </label>
                 <select class="govuk-select" id="bank" name="bank">
                     <option disabled selected value></option>
-                    {% for option in providerOptions %}
-                        <option value="{{ option.name }}">{{ option.displayName }}</option>
+                    {% for bank in banks %}
+                        <option value="{{ bank.identifier }}">{{ bank.displayName }}</option>
                     {% endfor %}
                 </select>
             </div>

@@ -8,11 +8,11 @@ const port = 8080
 
 export async function showBankSelectorPage(req: Request, res: Response, next: NextFunction) {
     const providers = await getProviders()
-    const providerOptions = providers.map(provider => ({
+    const banks = providers.map(provider => ({
         displayName: `${provider.displayName} - ${provider.displayDescription}`,
-        name: provider.name
+        identifier: provider.name
     }))
-    res.render('tink_bank_selector', {providerOptions})
+    res.render('bank_selector', {banks})
 }
 
 // Example callback url for an error payment: http://localhost:8080/callback?credentials=aa08a11adcfa4cae8c6c7778c70e5ba5&error=BAD_REQUEST&error_reason=INVALID_STATE_PAYMENT_RETRY_NOT_ALLOWED&message=We%27re%20sorry%2C%20an%20error%20has%20occurred&payment_request_id=0904ca74d62940c686343a9dfe82e56a&tracking_id=21ee7ad7-2fbe-4a58-8993-6799dbc4fc31
