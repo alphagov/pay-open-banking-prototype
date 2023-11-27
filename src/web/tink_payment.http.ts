@@ -24,6 +24,7 @@ export async function success(req: Request, res: Response, next: NextFunction) {
 
 export async function submitBankSelectorPage(req: Request, res: Response, next: NextFunction) {
     try {
+        const provider = req.body.bank
         const accessToken = await getAccessToken();
         const response = await axios({
             method: "POST",
@@ -55,7 +56,7 @@ export async function submitBankSelectorPage(req: Request, res: Response, next: 
             logger.error('Something wrong with calling /v1/payments/requests')
             throw new Error()
         } else {
-            res.redirect(createTinkUrl(response.data.id, req.body.provider))
+            res.redirect(createTinkUrl(response.data.id, provider))
         }
     } catch (e) {
         next(e)
