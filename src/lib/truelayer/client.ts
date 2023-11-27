@@ -31,7 +31,10 @@ export async function createPayment(accessToken: string): Promise<TrueLayerPayme
         payment_method: {
             type: 'bank_transfer',
             provider_selection: {
-                type: 'user_selected'
+                type: 'user_selected',
+                scheme_selection: {
+                    type: 'instant_only'
+                }
             },
             beneficiary: {
                 type: 'merchant_account',
