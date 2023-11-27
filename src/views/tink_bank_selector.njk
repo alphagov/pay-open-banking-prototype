@@ -1,0 +1,43 @@
+{% extends "layout.njk" %}
+
+{% block pageSpecificStyle %}
+    <link rel="stylesheet" href="/stylesheets/accessible-autocomplete.min.css"/>
+    <script type="text/javascript" src="/javascripts/accessible-autocomplete.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            accessibleAutocomplete.enhanceSelectElement({
+                selectElement: document.querySelector('#bank-picker')
+            })
+        })
+    </script>
+{% endblock %}
+
+{% block mainContent %}
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">What is the name of your bank account?</h1>
+
+        <p class="govuk-body">Select your bank account to approve a one-off payment using your online banking or mobile
+            app.</p>
+
+        <h2 class="govuk-heading-s">Search for your bank</h2>
+
+        <form action="/make-a-tink-payment" method="post">
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="bank-picker">
+                    Start typing your bank account
+                </label>
+                <select class="govuk-select" id="bank-picker" name="bank-picker">
+                    <option disabled selected value></option>
+                    {% for option in providerOptions %}
+                        <option value="{{ option.name }}">{{ option.displayName }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button class="govuk-button" data-module="govuk-button">
+                Continue
+            </button>
+        </form>
+    </div>
+
+{% endblock %}
