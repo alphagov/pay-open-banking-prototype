@@ -6,7 +6,6 @@ export async function showBankSelectorPage(req: Request, res: Response, next: Ne
         const accessToken = await getAccessToken()
         const payment = await createPayment(accessToken)
         const authResponse = await getProviderSelection(payment.id, accessToken)
-        // TODO: we would show a bank selection screen now, but for now just pick the first provider
         const banks = authResponse.authorization_flow.actions.next.providers.map(provider => ({
             identifier: provider.id,
             displayName: provider.display_name
