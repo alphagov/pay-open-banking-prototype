@@ -6,7 +6,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             accessibleAutocomplete.enhanceSelectElement({
-                selectElement: document.querySelector('#bank-picker')
+                selectElement: document.querySelector('#bank')
             })
         })
     </script>
@@ -26,7 +26,7 @@
                 <label class="govuk-label" for="bank-picker">
                     Start typing your bank account
                 </label>
-                <select class="govuk-select" id="bank-picker" name="bank-picker">
+                <select class="govuk-select" id="bank" name="bank">
                     <option disabled selected value></option>
                     {% for option in providerOptions %}
                         <option value="{{ option.name }}">{{ option.displayName }}</option>
