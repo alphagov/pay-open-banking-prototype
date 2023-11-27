@@ -6,7 +6,6 @@ import session from 'express-session'
 import path from 'path'
 
 import logger from './logger'
-import * as example from './web/example.http'
 import * as tinkPayment from './web/tink_payment.http'
 import * as truelayerPayment from './web/truelayer_payment.http'
 
@@ -30,15 +29,12 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.json({ strict: true, limit: '15kb' }))
 app.use(flash())
 
-// Add routes here
-app.get('/example', example.show)
-
 // Tink routes
 app.get('/callback', tinkPayment.success)
 app.get('/make-a-tink-payment', tinkPayment.paymentPage)
 app.post('/make-a-tink-payment', tinkPayment.requestPayment)
 
-// Truelayer routes
+// TrueLayer routes
 app.get('/truelayer/start', truelayerPayment.startPayment)
 
 app.listen(port, () => logger.info(`server started on port ${port}`))
