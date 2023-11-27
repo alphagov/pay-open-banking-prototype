@@ -2,8 +2,15 @@ import {Request, Response, NextFunction} from 'express'
 import axios from 'axios'
 import * as process from "process"
 import logger from '.././logger'
+import url from 'url'
 
 const port = 8080
+
+export async function paymentPage(req: Request, res: Response, next: NextFunction) {
+    const providers = await getProviders()
+    const providerOptions = providers.map(provider => provider.name)
+    res.render('make_a_tink_payment', { providerOptions })
+}
 
 // Example callback url for an error payment: http://localhost:8080/callback?credentials=aa08a11adcfa4cae8c6c7778c70e5ba5&error=BAD_REQUEST&error_reason=INVALID_STATE_PAYMENT_RETRY_NOT_ALLOWED&message=We%27re%20sorry%2C%20an%20error%20has%20occurred&payment_request_id=0904ca74d62940c686343a9dfe82e56a&tracking_id=21ee7ad7-2fbe-4a58-8993-6799dbc4fc31
 // Example callback url for a successful payment: http://localhost:8080/callback?payment_request_id=xxx
@@ -45,15 +52,46 @@ export async function requestPayment(req: Request, res: Response, next: NextFunc
             logger.error('Something wrong with calling /v1/payments/requests')
             throw new Error()
         } else {
-            res.send({next_url: createTinkUrl(response.data.id)})
+            res.redirect(createTinkUrl(response.data.id, req.body.provider))
         }
     } catch (e) {
         next(e)
     }
 }
 
-function createTinkUrl(paymentRequestId: string) {
-    return `https://link.tink.com/1.0/pay/?client_id=${process.env.TINK_CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A${port}%2Fcallback&market=GB&locale=en_US&payment_request_id=${paymentRequestId}`
+class Provider {
+    name: string
+}
+
+async function getProviders(): Promise<Provider[]> {
+    const accessToken = await getAccessToken();
+    const response = await axios({
+        method: "GET",
+        url: 'https://api.tink.com/api/v1/providers/GB',
+        params: {
+            includeTestProviders: true
+        },
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        }
+    })
+    return response.data.providers
+}
+
+function createTinkUrl(paymentRequestId: string, providerName: string) {
+    const baseUrl = 'https://link.tink.com/1.0/pay/'
+    const queryParams = {
+        client_id: `${process.env.TINK_CLIENT_ID}`,
+        redirect_uri: `http://localhost:${port}/callback`,
+        market: 'GB',
+        locale: 'en_US',
+        payment_request_id: `${paymentRequestId}`,
+        input_provider: `${providerName}`
+    }
+    return url.format({
+        pathname: baseUrl,
+        query: queryParams,
+    })
 }
 
 async function getAccessToken() {

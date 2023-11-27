@@ -1,0 +1,20 @@
+{% extends "layout.njk" %}
+
+{% block mainContent %}
+
+  <h1>Select A Provider</h1>
+
+  <form action="/make-a-tink-payment" method="post">
+    {% for option in providerOptions %}
+      <label>
+        <input type="radio" name="provider" value="{{ option }}">
+        {{ option }}
+      </label>
+      <br>
+    {% endfor %}
+
+    <br>
+    <button type="submit">Submit</button>
+  </form>
+
+{% endblock %}
