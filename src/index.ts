@@ -35,6 +35,7 @@ app.get('/make-a-tink-payment', tinkPayment.showBankSelectorPage)
 app.post('/make-a-tink-payment', tinkPayment.submitBankSelectorPage)
 
 // TrueLayer routes
-app.get('/truelayer/start', truelayerPayment.startPayment)
+app.get('/truelayer/start', truelayerPayment.showBankSelectorPage)
+app.post('/truelayer/start', truelayerPayment.submitBankSelectorPage)
 
 app.listen(port, () => logger.info(`server started on port ${port}`))
