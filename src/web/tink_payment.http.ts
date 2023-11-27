@@ -2,6 +2,7 @@ import {Request, Response, NextFunction} from 'express'
 import axios from 'axios'
 import * as process from "process"
 import logger from '.././logger'
+import url from 'url'
 
 const port = 8080
 
@@ -51,7 +52,7 @@ export async function requestPayment(req: Request, res: Response, next: NextFunc
             logger.error('Something wrong with calling /v1/payments/requests')
             throw new Error()
         } else {
-            res.send({next_url: createTinkUrl(response.data.id)})
+            res.redirect(createTinkUrl(response.data.id, req.body.provider))
         }
     } catch (e) {
         next(e)
@@ -77,8 +78,20 @@ async function getProviders(): Promise<Provider[]> {
     return response.data.providers
 }
 
-function createTinkUrl(paymentRequestId: string) {
-    return `https://link.tink.com/1.0/pay/?client_id=${process.env.TINK_CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A${port}%2Fcallback&market=GB&locale=en_US&payment_request_id=${paymentRequestId}`
+function createTinkUrl(paymentRequestId: string, providerName: string) {
+    const baseUrl = 'https://link.tink.com/1.0/pay/'
+    const queryParams = {
+        client_id: `${process.env.TINK_CLIENT_ID}`,
+        redirect_uri: `http://localhost:${port}/callback`,
+        market: 'GB',
+        locale: 'en_US',
+        payment_request_id: `${paymentRequestId}`,
+        input_provider: `${providerName}`
+    }
+    return url.format({
+        pathname: baseUrl,
+        query: queryParams,
+    })
 }
 
 async function getAccessToken() {

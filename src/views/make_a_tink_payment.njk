@@ -4,10 +4,10 @@
 
   <h1>Select A Provider</h1>
 
-  <form action="/make_a_tink_payment" method="post">
+  <form action="/make-a-tink-payment" method="post">
     {% for option in providerOptions %}
       <label>
-        <input type="radio" name="option" value="{{ option }}">
+        <input type="radio" name="provider" value="{{ option }}">
         {{ option }}
       </label>
       <br>
