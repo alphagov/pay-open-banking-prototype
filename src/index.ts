@@ -8,6 +8,7 @@ import path from 'path'
 import logger from './logger'
 import * as tinkPayment from './web/tink_payment.http'
 import * as truelayerPayment from './web/truelayer_payment.http'
+import * as ecospendPayment from './web/ecospend_payment.http'
 
 dotenv.config()
 
@@ -37,5 +38,9 @@ app.post('/make-a-tink-payment', tinkPayment.submitBankSelectorPage)
 // TrueLayer routes
 app.get('/truelayer/start', truelayerPayment.showBankSelectorPage)
 app.post('/truelayer/start', truelayerPayment.submitBankSelectorPage)
+
+// Ecospend routes
+app.get('/make-an-ecospend-payment', ecospendPayment.showBankSelectorPage)
+app.post('/make-an-ecospend-payment', ecospendPayment.submitBankSelectorPage)
 
 app.listen(port, () => logger.info(`server started on port ${port}`))
