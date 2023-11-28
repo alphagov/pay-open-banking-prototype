@@ -4,8 +4,7 @@ import * as process from "process"
 import logger from '.././logger'
 import url from 'url'
 import qrcode from 'qrcode'
-
-const port = 8080
+import {PORT} from "../config";
 
 export async function showBankSelectorPage(req: Request, res: Response, next: NextFunction) {
     const providers = await getProviders()
@@ -109,7 +108,7 @@ function createTinkUrl(paymentRequestId: string, providerName: string) {
     const baseUrl = 'https://link.tink.com/1.0/pay/'
     const queryParams = {
         client_id: `${process.env.TINK_CLIENT_ID}`,
-        redirect_uri: `http://localhost:${port}/callback`,
+        redirect_uri: `http://localhost:${PORT}/tink/callback`,
         market: 'GB',
         locale: 'en_US',
         payment_request_id: `${paymentRequestId}`,

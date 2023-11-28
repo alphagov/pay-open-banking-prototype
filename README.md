@@ -23,9 +23,7 @@ Ensure the following environment variables are passed in to the run command or s
 
 ### Make a payment
 
-`curl -X POST http://localhost:8080/make-a-tink-payment` to get a `next_url`. Open `next_url` and complete the payment.
-
-The payment outcome should redirect to http://localhost:8080/callback on this app.
+Visit `http://localhost:8080/tink/payment`
 
 ## Run a TrueLayer demo
 
@@ -52,7 +50,7 @@ npm run start
 
 ### Make a payment
 
-Visit `http://localhost:8080/truelayer/start`
+Visit `http://localhost:8080/truelayer/payment`
 
 ## Run an Ecospend demo
 

@@ -4,6 +4,7 @@ import axios from 'axios'
 import process from 'process';
 import crypto from 'crypto';
 import {ProviderSelection, RedirectResponse, TrueLayerPayment} from "./types";
+import {PORT} from "../../config";
 
 const TRUELAYER_API_BASE_URL = 'https://api.truelayer-sandbox.com'
 const TRUELAYER_AUTH_BASE_URL = 'https://auth.truelayer-sandbox.com/'
@@ -66,7 +67,7 @@ export async function getProviderSelection(paymentId: string, accessToken: strin
     const data = {
         provider_selection: {},
         redirect: {
-            "return_uri": "http://localhost:8080/callback"
+            "return_uri": `http://localhost:${PORT}/truelayer/callback`
         }
     }
     const url = `/v3/payments/${paymentId}/authorization-flow`;

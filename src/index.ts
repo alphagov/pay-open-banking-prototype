@@ -9,11 +9,11 @@ import logger from './logger'
 import * as tinkPayment from './web/tink_payment.http'
 import * as truelayerPayment from './web/truelayer_payment.http'
 import * as ecospendPayment from './web/ecospend_payment.http'
+import {PORT} from './config'
 
 dotenv.config()
 
 const app = express()
-const port = 8080
 
 app.use(express.static(__dirname + '/public'))
 app.use('/', express.static('node_modules/govuk-frontend/govuk'))
@@ -31,18 +31,19 @@ app.use(express.json({ strict: true, limit: '15kb' }))
 app.use(flash())
 
 // Tink routes
-app.get('/callback', tinkPayment.success)
-app.get('/make-a-tink-payment', tinkPayment.showBankSelectorPage)
-app.post('/make-a-tink-payment', tinkPayment.redirectToBankAccountLoginMethod)
+app.get('/tink/payment', tinkPayment.showBankSelectorPage)
+app.post('/tink/payment', tinkPayment.redirectToBankAccountLoginMethod)
 app.get('/tink/select-login-method', tinkPayment.selectLoginMethod)
 app.post('/tink/select-login-method', tinkPayment.makeBankPayment)
+app.get('/tink/callback', tinkPayment.success)
 
 // TrueLayer routes
-app.get('/truelayer/start', truelayerPayment.showBankSelectorPage)
-app.post('/truelayer/start', truelayerPayment.submitBankSelectorPage)
+app.get('/truelayer/payment', truelayerPayment.showBankSelectorPage)
+app.post('/truelayer/payment', truelayerPayment.submitBankSelectorPage)
+app.get('/truelayer/callback', tinkPayment.success)
 
 // Ecospend routes
-app.get('/make-an-ecospend-payment', ecospendPayment.showBankSelectorPage)
-app.post('/make-an-ecospend-payment', ecospendPayment.submitBankSelectorPage)
+app.get('/ecospend/payment', ecospendPayment.showBankSelectorPage)
+app.post('/ecospend/payment', ecospendPayment.submitBankSelectorPage)
 
-app.listen(port, () => logger.info(`server started on port ${port}`))
+app.listen(PORT, () => logger.info(`server started on port ${PORT}`))
