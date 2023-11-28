@@ -3,6 +3,27 @@
 {% block mainContent %}
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-l">How do you want to log in to your {{ displayName }} account?</h1>
-        <input id="provider" name="provider" type="hidden" value="{{ provider }}">
+        <form method="post">
+            <input id="provider" name="provider" type="hidden" value="{{ provider }}">
+            <input id="tinkRedirectUrl" name="tinkRedirectUrl" type="hidden" value="{{ tinkRedirectUrl }}">
+
+            {{ govukRadios({
+              name: "loginMethod",
+              items: [
+                {
+                  value: "wales",
+                  text: "I want to use my phone and scan a QR code"
+                },
+                {
+                  value: "northern-ireland",
+                  text: "I want to stay on this device and use my bank's device"
+                }
+              ]
+            }) }}
+
+            <button class="govuk-button" data-module="govuk-button">
+                Continue
+            </button>
+        </form>
     </div>
 {% endblock %}

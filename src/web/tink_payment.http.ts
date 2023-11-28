@@ -3,6 +3,7 @@ import axios from 'axios'
 import * as process from "process"
 import logger from '.././logger'
 import url from 'url'
+import qrcode from 'qrcode'
 
 const port = 8080
 
@@ -21,9 +22,12 @@ export async function redirectToBankAccountLoginMethod(req: Request, res: Respon
 }
 
 export async function selectLoginMethod(req: Request, res: Response, next: NextFunction) {
+    const tinkRedirectUrl = getTinkRedirectUrl(`${req.query.provider}`)
+    const qrCodeDataUrl = await qrcode.toDataURL(tinkRedirectUrl)
     const data = {
         provider: req.query.provider,
-        displayName: req.query.displayName
+        displayName: req.query.displayName,
+        tinkRedirectUrl
     }
     res.render('bank_account_login_method', data)
 }
@@ -35,9 +39,8 @@ export async function success(req: Request, res: Response, next: NextFunction) {
     res.render('payment_success', {paymentId: req.query.payment_request_id})
 }
 
-export async function submitBankSelectorPage(req: Request, res: Response, next: NextFunction) {
+export async function getTinkRedirectUrl(provider: string) {
     try {
-        const provider = req.body.bank
         const accessToken = await getAccessToken();
         const response = await axios({
             method: "POST",
@@ -69,10 +72,10 @@ export async function submitBankSelectorPage(req: Request, res: Response, next: 
             logger.error('Something wrong with calling /v1/payments/requests')
             throw new Error()
         } else {
-            res.redirect(createTinkUrl(response.data.id, provider))
+            return createTinkUrl(response.data.id, provider)
         }
     } catch (e) {
-        next(e)
+        throw new Error()
     }
 }
 
