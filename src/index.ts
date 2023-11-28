@@ -32,7 +32,8 @@ app.use(flash())
 // Tink routes
 app.get('/callback', tinkPayment.success)
 app.get('/make-a-tink-payment', tinkPayment.showBankSelectorPage)
-app.post('/make-a-tink-payment', tinkPayment.submitBankSelectorPage)
+app.post('/make-a-tink-payment', tinkPayment.redirectToBankAccountLoginMethod)
+app.get('/tink/select-login-method', tinkPayment.selectLoginMethod)
 
 // TrueLayer routes
 app.get('/truelayer/start', truelayerPayment.showBankSelectorPage)
