@@ -36,13 +36,6 @@ export async function makeBankPayment(req: Request, res: Response, next: NextFun
     res.redirect(req.body.tinkRedirectUrl)
 }
 
-// Example callback url for an error payment: http://localhost:8080/callback?credentials=aa08a11adcfa4cae8c6c7778c70e5ba5&error=BAD_REQUEST&error_reason=INVALID_STATE_PAYMENT_RETRY_NOT_ALLOWED&message=We%27re%20sorry%2C%20an%20error%20has%20occurred&payment_request_id=0904ca74d62940c686343a9dfe82e56a&tracking_id=21ee7ad7-2fbe-4a58-8993-6799dbc4fc31
-// Example callback url for a successful payment: http://localhost:8080/callback?payment_request_id=xxx
-export async function success(req: Request, res: Response, next: NextFunction) {
-    // pass payment result details to connector for example
-    res.render('payment_success', {paymentId: req.query.payment_request_id})
-}
-
 export async function getTinkRedirectUrl(provider: string) {
     try {
         const accessToken = await getAccessToken();
@@ -83,7 +76,37 @@ export async function getTinkRedirectUrl(provider: string) {
     }
 }
 
-class Provider {
+// Example callback url for an error payment: http://localhost:8080/callback?credentials=aa08a11adcfa4cae8c6c7778c70e5ba5&error=BAD_REQUEST&error_reason=INVALID_STATE_PAYMENT_RETRY_NOT_ALLOWED&message=We%27re%20sorry%2C%20an%20error%20has%20occurred&payment_request_id=0904ca74d62940c686343a9dfe82e56a&tracking_id=21ee7ad7-2fbe-4a58-8993-6799dbc4fc31
+// Example callback url for a successful payment: http://localhost:8080/callback?payment_request_id=xxx
+export async function success(req: Request, res: Response, next: NextFunction) {
+    try {
+        const paymentId = req.query.payment_request_id as string
+        const error = req.query.error as string
+        const message = req.query.message as string
+        if (error) {
+            if (error === 'USER_CANCELLED') {
+                res.render('payment_cancelled')
+            } else if (error === 'AUTHENTICATION_ERROR') {
+                res.render('payment_failed', {message})
+            } else {
+                res.render('payment_error')
+            }
+        } else {
+            const transfer = await getPaymentTransfer(paymentId)
+            logger.info("Looked up transfer for successful payment.", {
+                transferStatus: transfer.status,
+                transferStatusMessage: transfer.statusMessage
+            })
+            res.render('payment_success', {
+                paymentId
+            })
+        }
+    } catch (err) {
+        next(err)
+    }
+}
+
+interface Provider {
     name: string;
     displayName: string;
     displayDescription: string;
@@ -133,4 +156,21 @@ async function getAccessToken() {
     } else {
         return response.data.access_token
     }
+}
+
+interface Transfer {
+    status: string;
+    statusMessage: string;
+}
+
+async function getPaymentTransfer(paymentId: string): Promise<Transfer> {
+    const accessToken = await getAccessToken();
+    const response = await axios({
+        method: "GET",
+        url: `https://api.tink.com/api/v1/payments/requests/${paymentId}/transfers`,
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        }
+    })
+    return response.data && response.data.paymentRequestCreatedTransfers && response.data.paymentRequestCreatedTransfers[0]
 }
