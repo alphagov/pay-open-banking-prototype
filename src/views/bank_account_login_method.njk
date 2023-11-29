@@ -1,0 +1,28 @@
+{% extends "layout.njk" %}
+
+{% block mainContent %}
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">How do you want to log in to your {{ displayName }} account?</h1>
+        <form method="post">
+            <input id="tinkRedirectUrl" name="tinkRedirectUrl" type="hidden" value="{{ tinkRedirectUrl }}">
+
+            {{ govukRadios({
+              name: "loginMethod",
+              items: [
+                {
+                  value: "qr",
+                  text: "I want to use my phone and scan a QR code"
+                },
+                {
+                  value: "device",
+                  text: "I want to stay on this device and use my bank's device"
+                }
+              ]
+            }) }}
+
+            <button class="govuk-button" data-module="govuk-button">
+                Continue
+            </button>
+        </form>
+    </div>
+{% endblock %}

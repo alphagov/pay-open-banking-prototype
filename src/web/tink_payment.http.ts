@@ -3,6 +3,7 @@ import axios from 'axios'
 import * as process from "process"
 import logger from '.././logger'
 import url from 'url'
+import qrcode from 'qrcode'
 
 const port = 8080
 
@@ -10,9 +11,30 @@ export async function showBankSelectorPage(req: Request, res: Response, next: Ne
     const providers = await getProviders()
     const banks = providers.map(provider => ({
         displayName: `${provider.displayName} - ${provider.displayDescription}`,
-        identifier: provider.name
+        identifier: `${provider.name}__${provider.displayName}`
     }))
     res.render('bank_selector', {banks})
+}
+
+export async function redirectToBankAccountLoginMethod(req: Request, res: Response, next: NextFunction) {
+    const selectedBankIdentifier = req.body.bank.split('__')
+    res.redirect(`/tink/select-login-method?provider=${selectedBankIdentifier[0]}&displayName=${selectedBankIdentifier[1]}`)
+}
+
+export async function selectLoginMethod(req: Request, res: Response, next: NextFunction) {
+    const tinkRedirectUrl = await getTinkRedirectUrl(`${req.query.provider}`)
+    const qrCodeDataUrl = await qrcode.toDataURL(tinkRedirectUrl)
+    const data = {
+        displayName: req.query.displayName,
+        tinkRedirectUrl,
+        qrCodeDataUrl
+    }
+    res.render('bank_account_login_method', data)
+}
+
+export async function makeBankPayment(req: Request, res: Response, next: NextFunction) {
+    // TODO QR code method. Currently only works for same device.
+    res.redirect(req.body.tinkRedirectUrl)
 }
 
 // Example callback url for an error payment: http://localhost:8080/callback?credentials=aa08a11adcfa4cae8c6c7778c70e5ba5&error=BAD_REQUEST&error_reason=INVALID_STATE_PAYMENT_RETRY_NOT_ALLOWED&message=We%27re%20sorry%2C%20an%20error%20has%20occurred&payment_request_id=0904ca74d62940c686343a9dfe82e56a&tracking_id=21ee7ad7-2fbe-4a58-8993-6799dbc4fc31
@@ -22,9 +44,8 @@ export async function success(req: Request, res: Response, next: NextFunction) {
     res.render('payment_success', {paymentId: req.query.payment_request_id})
 }
 
-export async function submitBankSelectorPage(req: Request, res: Response, next: NextFunction) {
+export async function getTinkRedirectUrl(provider: string) {
     try {
-        const provider = req.body.bank
         const accessToken = await getAccessToken();
         const response = await axios({
             method: "POST",
@@ -56,10 +77,10 @@ export async function submitBankSelectorPage(req: Request, res: Response, next: 
             logger.error('Something wrong with calling /v1/payments/requests')
             throw new Error()
         } else {
-            res.redirect(createTinkUrl(response.data.id, provider))
+            return createTinkUrl(response.data.id, provider)
         }
     } catch (e) {
-        next(e)
+        throw new Error()
     }
 }
 
