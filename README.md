@@ -54,4 +54,23 @@ npm run start
 
 Visit `http://localhost:8080/truelayer/start`
 
+## Run an Ecospend demo
+
+### Environment variables
+
+Ensure the following environment variables are passed in to the run command or set in the `.env` file:
+
+| Environment variable   | Description                            |
+|------------------------|----------------------------------------|
+| ECOSPEND_CLIENT_ID     | The client ID for the Ecospend app     |
+| ECOSPEND_CLIENT_SECRET | The client secret for the Ecospend app |
+
+You can generate a secret in the [Ecospend Management Console](https://console.sb.ecospend.com/organization/clients). 
+
+### Make a payment
+
+Visit `http://localhost:8080/make-an-ecospend-payment`
+
+After the confirming the payment through the bank, the app will redirect to a predefined redirect_url.
+The redirect_url has to be registered in the [Ecospend Management Console](https://console.sb.ecospend.com/organization/clients).
 

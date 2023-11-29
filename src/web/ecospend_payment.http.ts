@@ -56,7 +56,7 @@ export async function submitBankSelectorPage(req: Request, res: Response, next: 
                 "currency": "GBP",
                 "description": "Any description text.",
                 "reference": "OB test",
-                "redirect_url": "https://www.wikipedia.org/",
+                "redirect_url": "https://www.payments.service.gov.uk/",
                 "merchant_id": "125458 | 00000000-2e6a-4bcb-8746-4f90528b2470",
                 "merchant_user_id": "125458 | 00000000-2e6a-4bcb-8746-4f90528b2470",
                 "creditor_account": {
