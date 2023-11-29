@@ -67,7 +67,7 @@ You can generate a secret in the [Ecospend Management Console](https://console.s
 
 ### Make a payment
 
-Visit `http://localhost:8080/make-an-ecospend-payment`
+Visit `http://localhost:8080/ecospend/payment`
 
 After the confirming the payment through the bank, the app will redirect to a predefined redirect_url.
 The redirect_url has to be registered in the [Ecospend Management Console](https://console.sb.ecospend.com/organization/clients).
