@@ -47,6 +47,7 @@
     "@types/express-session": "^1.17.8",
     "@types/node": "^18.18.5",
     "@types/nunjucks": "^3.2.4",
+    "@types/qrcode": "^1.5.5",
     "copyfiles": "^2.4.1",
     "grunt": "^1.6.1",
     "grunt-contrib-clean": "^2.0.1",
