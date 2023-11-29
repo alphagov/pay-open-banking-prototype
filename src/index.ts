@@ -36,6 +36,7 @@ app.post('/tink/payment', tinkPayment.redirectToBankAccountLoginMethod)
 app.get('/tink/select-login-method', tinkPayment.selectLoginMethod)
 app.post('/tink/select-login-method', tinkPayment.makeBankPayment)
 app.get('/tink/callback', tinkPayment.handleReturn)
+app.get('/tink/qr-method', tinkPayment.makeBankPayment)
 
 // TrueLayer routes
 app.get('/truelayer/payment', truelayerPayment.showBankSelectorPage)
