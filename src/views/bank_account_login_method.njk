@@ -5,6 +5,7 @@
         <h1 class="govuk-heading-l">How do you want to log in to your {{ displayName }} account?</h1>
         <form method="post">
             <input id="tinkRedirectUrl" name="tinkRedirectUrl" type="hidden" value="{{ tinkRedirectUrl }}">
+            <input id="qrCodeDataUrl" name="qrCodeDataUrl" type="hidden" value="{{ qrCodeDataUrl }}">
 
             {{ govukRadios({
               name: "loginMethod",

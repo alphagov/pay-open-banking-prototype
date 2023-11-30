@@ -33,7 +33,10 @@ export async function selectLoginMethod(req: Request, res: Response, next: NextF
 
 export async function makeBankPayment(req: Request, res: Response, next: NextFunction) {
     // TODO QR code method. Currently only works for same device.
-    res.redirect(req.body.tinkRedirectUrl)
+    if (req.body.loginMethod === 'device') {
+        return res.redirect(req.body.tinkRedirectUrl)
+    }
+    res.render('qr_method', { qrCodeDataUrl: req.body.qrCodeDataUrl })
 }
 
 export async function getTinkRedirectUrl(provider: string) {

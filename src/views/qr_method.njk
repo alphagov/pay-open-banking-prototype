@@ -1,0 +1,11 @@
+{% extends "layout.njk" %}
+
+{% block mainContent %}
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">Scan this QR code on your mobile device to continue your payment.</h1>
+
+        <figure class="govuk-!-margin-top-0 govuk-!-margin-left-0 govuk-!-margin-bottom-6">
+          <img class="qr-code pay-!-negative-margin-h-3" src="{{qrCodeDataUrl}}" data-cy="qr" alt="If you cannot view or scan the barcode, please enter the secret manually">
+        </figure>
+    </div>
+{% endblock %}
