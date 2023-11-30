@@ -35,12 +35,12 @@ app.get('/tink/payment', tinkPayment.showBankSelectorPage)
 app.post('/tink/payment', tinkPayment.redirectToBankAccountLoginMethod)
 app.get('/tink/select-login-method', tinkPayment.selectLoginMethod)
 app.post('/tink/select-login-method', tinkPayment.makeBankPayment)
-app.get('/tink/callback', tinkPayment.success)
+app.get('/tink/callback', tinkPayment.handleReturn)
 
 // TrueLayer routes
 app.get('/truelayer/payment', truelayerPayment.showBankSelectorPage)
 app.post('/truelayer/payment', truelayerPayment.submitBankSelectorPage)
-app.get('/truelayer/callback', tinkPayment.success)
+app.get('/truelayer/callback', truelayerPayment.handleReturn)
 
 // Ecospend routes
 app.get('/ecospend/payment', ecospendPayment.showBankSelectorPage)

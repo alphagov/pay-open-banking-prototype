@@ -1,0 +1,14 @@
+{% extends "layout.njk" %}
+
+{% block pageSpecificStyle %}
+    <meta http-equiv="refresh" content="2" />
+{% endblock %}
+
+{% block mainContent %}
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">Payment in progress</h1>
+        <div id="spinner">
+            <img src="/images/spinner.gif"/>
+        </div>
+    </div>
+{% endblock %}
