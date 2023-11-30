@@ -30,3 +30,8 @@ export interface RedirectResponse {
         }
     }
 }
+
+export interface Payment {
+    status: string;
+    failure_reason?: string;
+}

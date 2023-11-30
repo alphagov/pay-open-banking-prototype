@@ -3,7 +3,7 @@ import {HttpMethod} from 'truelayer-signing'
 import axios from 'axios'
 import process from 'process';
 import crypto from 'crypto';
-import {ProviderSelection, RedirectResponse, TrueLayerPayment} from "./types";
+import {Payment, ProviderSelection, RedirectResponse, TrueLayerPayment} from "./types";
 import {PORT} from "../../config";
 
 const TRUELAYER_API_BASE_URL = 'https://api.truelayer-sandbox.com'
@@ -87,7 +87,7 @@ export async function getProviderSelection(paymentId: string, accessToken: strin
     return response && response.data
 }
 
-export async function submitProviderSelection(paymentId: string, providerId: string, accessToken:string): Promise<RedirectResponse> {
+export async function submitProviderSelection(paymentId: string, providerId: string, accessToken: string): Promise<RedirectResponse> {
     const idempotencyKey = crypto.randomUUID()
     const data = {
         provider_id: providerId,
@@ -99,6 +99,24 @@ export async function submitProviderSelection(paymentId: string, providerId: str
         url,
         method: 'POST',
         data,
+        headers: {
+            'Tl-Signature': signature,
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+            'Idempotency-Key': idempotencyKey
+        }
+    })
+    return response && response.data
+}
+
+export async function getPayment(paymentId: string, accessToken: string): Promise<Payment> {
+    const idempotencyKey = crypto.randomUUID()
+    const url = `/v3/payments/${paymentId}`;
+    const signature = generateSignature(idempotencyKey, null, url);
+    const response = await axios({
+        baseURL: TRUELAYER_API_BASE_URL,
+        url,
+        method: 'GET',
         headers: {
             'Tl-Signature': signature,
             Authorization: `Bearer ${accessToken}`,
