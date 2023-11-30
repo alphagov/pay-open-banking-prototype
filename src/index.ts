@@ -46,5 +46,6 @@ app.get('/truelayer/callback', truelayerPayment.handleReturn)
 // Ecospend routes
 app.get('/ecospend/payment', ecospendPayment.showBankSelectorPage)
 app.post('/ecospend/payment', ecospendPayment.submitBankSelectorPage)
+app.get('/ecospend/callback', ecospendPayment.handleReturn)
 
 app.listen(PORT, () => logger.info(`server started on port ${PORT}`))
