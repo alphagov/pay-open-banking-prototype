@@ -1,3 +1,5 @@
+> As of December 2025 this repository is no longer maintained by the GOV.UK Pay team.
+
 # pay-open-banking-prototype
 
 GOV.UK Pay prototype for an open banking user journey
